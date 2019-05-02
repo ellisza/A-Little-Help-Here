@@ -5,8 +5,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface JsonPlaceHolderApi {
+public interface AlhhApi {
 
-    @GET("posts")
-    Call<List<Post>> getPosts();
+    @GET("getHelps")
+    Call<List<Help>> getHelps();
 }
