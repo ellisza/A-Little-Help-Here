@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.List;
 
@@ -61,30 +63,35 @@ public class MainActivity extends AppCompatActivity {
 
         AlhhApi alhhApi = alhhRetrofit.create(AlhhApi.class);
 
-        Call<List<Help>> alhhCall = alhhApi.getHelps();
+        final Call<List<Help>> alhhCall = alhhApi.getHelps();
 
-        alhhCall.enqueue(new Callback<List<Help>>() {
-            @Override
-            public void onResponse(Call<List<Help>> call, Response<List<Help>> response) {
+        final Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                alhhCall.enqueue(new Callback<List<Help>>() {
+                    @Override
+                    public void onResponse(Call<List<Help>> call, Response<List<Help>> response) {
 
-                if (!response.isSuccessful()) {
-                    resultsText.setText("Code:" + response.code());
-                    return;
-                }
+                        if (!response.isSuccessful()) {
+                            resultsText.setText("Code:" + response.code());
+                            return;
+                        }
 
-                List<Help> helps = response.body();
+                        List<Help> helps = response.body();
 
-                for(Help help: helps){
-                    String content = "";
-                    content += "Title: " + help.getTitle() + "\n";
-                    content += "Address: " + help.getAddress() + "\n\n";
-                    resultsText.append(content);
-                }
-            }
+                        for(Help help: helps){
+                            String content = "";
+                            content += "Title: " + help.getTitle() + "\n";
+                            content += "Address: " + help.getAddress() + "\n\n";
+                            resultsText.append(content);
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<List<Help>> alhhCall, Throwable t) {
-                resultsText.setText(t.getMessage());
+                    @Override
+                    public void onFailure(Call<List<Help>> alhhCall, Throwable t) {
+                        resultsText.setText(t.getMessage());
+                    }
+                });
             }
         });
     }
