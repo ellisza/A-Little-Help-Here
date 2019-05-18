@@ -54,38 +54,36 @@ public class MainActivity extends AppCompatActivity {
 
         resultsText = findViewById(R.id.text_view_result);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
+        Retrofit alhhRetrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:3000")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        AlhhApi alhhApi = alhhRetrofit.create(AlhhApi.class);
 
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+        Call<List<Help>> alhhCall = alhhApi.getHelps();
 
-        call.enqueue(new Callback<List<Post>>() {
+        alhhCall.enqueue(new Callback<List<Help>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+            public void onResponse(Call<List<Help>> call, Response<List<Help>> response) {
 
                 if (!response.isSuccessful()) {
                     resultsText.setText("Code:" + response.code());
                     return;
                 }
 
-                List<Post> posts = response.body();
+                List<Help> helps = response.body();
 
-                for(Post post : posts){
+                for(Help help: helps){
                     String content = "";
-                    content += "User ID: " + post.getUserId() + "\n";
-                    content += "ID: " + post.getId() + "\n";
-                    content += "Title: " + post.getTitle() + "\n";
-                    content += "Body: " + post.getText() + "\n\n";
+                    content += "Title: " + help.getTitle() + "\n";
+                    content += "Address: " + help.getAddress() + "\n\n";
                     resultsText.append(content);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void onFailure(Call<List<Help>> alhhCall, Throwable t) {
                 resultsText.setText(t.getMessage());
             }
         });
